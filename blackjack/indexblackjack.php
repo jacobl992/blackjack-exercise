@@ -13,7 +13,6 @@ $players = [];
 $i = 1;
 while ($i <= $cards) {
     $randomkey = array_rand($cardsArray);
-//    echo '<p>' . $randomkey . '</p>';
     $pickedCard = $cardsArray[$randomkey];
     if (str_starts_with($pickedCard, 10)) {
         $cardValue = 10;
@@ -24,9 +23,7 @@ while ($i <= $cards) {
     } else {
         $cardValue = 10;
     }
-//    echo '<p>' . $pickedCard . '</p>';
-//    echo '<p>' . 'Value of card is ' . $cardValue . '</p>';
-//    echo '<p>' . '   ------------------' . '</p>';
+
     if ($i % $numPlayers === 0) {
         $player = 'Player ' . $numPlayers;
     } else {
@@ -52,7 +49,6 @@ $playerTotals = [];
 $i = 1;
 while ($i <= $numPlayers) {
     $filteredScores = array_filter($playerScores, function ($value, $key) use ($i, $players) {
-        //The problem is how to make the $k adaptable
         return $players[$key] === 'Player ' . $i;
     }, ARRAY_FILTER_USE_BOTH);
     $twoCardScore = array_sum($filteredScores);
@@ -64,7 +60,27 @@ echo '<pre>';
 print_r($playerTotals);
 echo '</pre>';
 
-// Reset array keys if needed
-//$filteredArray = array_values($filteredArray);
+
+
+$i = 0;
+while (($i + 1) <= $numPlayers) {
+    $totalScore = $playerTotals[$i];
+    $playerTotalsRows = array_count_values($playerTotals);
+    $scoreOccurrences = $playerTotalsRows[$totalScore];
+    if ($playerTotals[$i] > 21) {
+        $result = 'are bust';
+        $playerTotals[$i] = 0;
+        //have to reset value to 0 otherwise the win condition below doesn't work
+    } elseif ($playerTotals[$i] === max($playerTotals) and $scoreOccurrences === 1 ) {
+        $result = 'WON!';
+    } elseif ($playerTotals[$i] === max($playerTotals) and $scoreOccurrences > 1) {
+        $result = 'drew';
+    } else {
+        $result = 'lost';
+    }
+    echo '<h3>Player ' . ($i+1) . ' total is ' . $playerTotals[$i] . ' - They ' . $result . '</h3>';
+    $i++;
+}
+
 
 
