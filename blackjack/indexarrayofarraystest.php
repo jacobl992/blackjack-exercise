@@ -47,7 +47,24 @@ echo '<pre>';
 print_r($allDealtCards);
 echo '</pre>';
 
-//next want to add summing to player scores based on player,
-//maybe this a new array that is group by, or sumif or something
-//from there can compare and contrast scores as before or maybe smarter way
-//then how would one add draw of third card for players less than 14 after 2 rounds of dealing,
+$playerTotals = [];
+
+$i = 1;
+while ($i <= $numPlayers) {
+    $filteredScores = array_filter($playerScores, function ($value, $key) use ($i, $players) {
+        //The problem is how to make the $k adaptable
+        return $players[$key] === 'Player ' . $i;
+    }, ARRAY_FILTER_USE_BOTH);
+    $twoCardScore = array_sum($filteredScores);
+    array_push($playerTotals,$twoCardScore);
+    $i++;
+}
+
+echo '<pre>';
+print_r($playerTotals);
+echo '</pre>';
+
+// Reset array keys if needed
+//$filteredArray = array_values($filteredArray);
+
+
